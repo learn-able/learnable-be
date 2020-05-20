@@ -12,11 +12,5 @@
 ## RSpec results
 
 ```
-Paste RSpec results here
-```
-
-## Rubocop results
-
-```
-Paste Rubocop results here
+Test Coverage Here
 ```
