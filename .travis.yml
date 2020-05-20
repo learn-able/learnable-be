@@ -1,7 +1,8 @@
 language: go
-
-go:
-- 1.x
-- "1.14"
-- 1.14.x
-- master
+sudo: false
+before_script:
+  - go vet ./...
+install:
+  # Add Godeps dependencies to GOPATH and PATH
+  - export GOPATH="${TRAVIS_BUILD_DIR}/Godeps/_workspace:$GOPATH"
+  - export PATH="${TRAVIS_BUILD_DIR}/Godeps/_workspace/bin:$PATH"
