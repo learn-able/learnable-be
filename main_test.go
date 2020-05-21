@@ -5,8 +5,8 @@ import (
 	"testing"
 )
 
-func TestMain(t *testing.T) {
-	got := main()
+func TestMain(t *testing.M) {
+	got := hello()
 	want := "Hello Learnable"
 
 	if got != want {
