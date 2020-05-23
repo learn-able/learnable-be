@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -10,25 +11,20 @@ import (
 
 func main() {
 	port := GetPort()
-	fmt.Println("Starting Service...")
+	fmt.Println("Starting Learnable Service...")
 
 	fmt.Println("Started...")
 	fmt.Println("Listening on Port: " + port)
 
-	router := mux.NewRouter()
+	router := mux.NewRouter().StrictSlash(true)
 
-	router.HandleFunc("/api/v0/user", userHandler).Methods("GET")
-	http.Handle("/", router)
-
+	NewRouter(router)
 	err := http.ListenAndServe(port, router)
-
 	if err != nil {
-		panic(err)
+		log.Fatal("ListenAndServe: ", err)
 	}
-}
 
-func userHandler(w http.ResponseWriter, r *http.Request) {
-
+	fmt.Println("Service Terminated...")
 }
 
 func GetPort() string {
