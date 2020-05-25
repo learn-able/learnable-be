@@ -27,12 +27,21 @@ func Connect() *pg.DB {
 
 	log.Printf("Connected to Learnable Database")
 
-	tblErr := models.CreateUserTable(db)
-	if tblErr != nil {
-		panic(tblErr)
-	}
-
-	models.InitiateDB(db)
+	createTables(db)
 
 	return db
+}
+
+func createTables(db *pg.DB) {
+	if userTblErr := models.CreateUserTable(db); userTblErr != nil {
+		panic(userTblErr)
+	}
+
+	models.InitiateUserDB(db)
+	
+	if playlistTblErr := models.CreatePlaylistTable(db); playlistTblErr != nil {
+		panic(playlistTblErr)
+	}
+
+	models.InitiatePlaylistDB(db)
 }
