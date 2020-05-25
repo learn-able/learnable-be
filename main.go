@@ -9,25 +9,25 @@ import (
 	routes "learnable-be/routes"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	// Dynamically dictates port for use with Heroku and other services
 	port := getPort()
+	gin.SetMode(gin.ReleaseMode)
 
-	// Connects to the postgres database
+	// Add environment variables for use in db auth
+	envErr := godotenv.Load("application.env")
+	if envErr != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	database.Connect()
 
-	// Start the gin Default router.
-	//    Starts a gin.Engine() instance with Logging and Recovery function
 	router := gin.Default()
 
-	// Retrieves all routes based on the routes local package
 	routes.GetRoutes(router)
 
-	// Logs a fatal response or will run the gin Default router with the port
-	//   created by the local getPort function
-	//   This is the normal gin way of error handling this process
 	log.Fatal(router.Run(port))
 }
 

@@ -7,15 +7,9 @@ import (
 	models "learnable-be/models"
 
 	"github.com/go-pg/pg"
-	"github.com/joho/godotenv"
 )
 
 func Connect() *pg.DB {
-	// Add environment variables for use in db auth
-	envErr := godotenv.Load("application.env")
-	if envErr != nil {
-		log.Fatal("Error loading .env file")
-	}
 	// postgres setup parameters
 	options := &pg.Options{
 		User:     os.Getenv("DB_USER"),
