@@ -1,2 +1,2 @@
-web: go build -o bin/learnableBE
-web: bin/learnableBE
+web: go build -o bin/learnable-be
+web: bin/learnable-be
