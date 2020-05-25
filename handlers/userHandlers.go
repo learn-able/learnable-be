@@ -21,7 +21,7 @@ type ReturnedUser struct {
 	Points   int    `json:"points"`
 }
 
-func CreateUserHandler(c *gin.Context) {
+func CreateUser(c *gin.Context) {
 	var input CreateUserInput
 
 	// Grabs and assigns information retrieved from JSON body
@@ -36,24 +36,24 @@ func CreateUserHandler(c *gin.Context) {
 
 	// Creates user
 	user := models.User{Username: input.Username, Password: input.Password}
-	models.DBConnect.Insert(&user)
+	models.UserConnect.Insert(&user)
 	// Returns status ok and 201 if the use was successfully created
 	// Also returns new user.
 	newUser := ReturnedUser{
-		ID: user.ID,
+		ID:       user.ID,
 		Username: user.Username,
-		Points: user.Points,
+		Points:   user.Points,
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
 		"status":  http.StatusCreated,
 		"message": "Successfully created user",
-		"data": newUser,
+		"data":    newUser,
 	})
 }
 
-func OneUserHandler(c *gin.Context) {
-	db := models.DBConnect
+func ShowUser(c *gin.Context) {
+	db := models.UserConnect
 	userID, _ := strconv.Atoi(c.Param("id")) // Grab id from URI params and converts to int
 	user := &models.User{ID: userID}         // Retrieve user from db through model
 
@@ -69,9 +69,9 @@ func OneUserHandler(c *gin.Context) {
 	}
 
 	foundUser := ReturnedUser{
-		ID: user.ID,
+		ID:       user.ID,
 		Username: user.Username,
-		Points: user.Points,
+		Points:   user.Points,
 	}
 	// Returns status ok for user if all goes well.
 	c.JSON(http.StatusOK, gin.H{
