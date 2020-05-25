@@ -15,28 +15,10 @@ type CreateUserInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
-func AllUsersHandler(c *gin.Context) {
-	// Creates an array to hold all users
-	var users []models.User
-
-	// Attempts a connection to the database to retrieve all users
-	//   returns an Internal SErver Error if a problem occurs
-	err := models.DBConnect.Model(&users).Select()
-	if err != nil {
-		log.Printf("Could not get all Users\nReason: %v\n", err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  http.StatusInternalServerError,
-			"message": "Internal Server Error",
-		})
-		return
-	}
-
-	// Returns a JSON response for the user that is created
-	c.JSON(http.StatusOK, gin.H{
-		"status":  http.StatusOK,
-		"message": "All Learnable Users",
-		"data":    users,
-	})
+type ReturnedUser struct {
+	ID       int    `json:"id"`
+	Username string `json:"username"`
+	Points   int    `json:"points"`
 }
 
 func CreateUserHandler(c *gin.Context) {
@@ -57,10 +39,16 @@ func CreateUserHandler(c *gin.Context) {
 	models.DBConnect.Insert(&user)
 	// Returns status ok and 201 if the use was successfully created
 	// Also returns new user.
+	newUser := ReturnedUser{
+		ID: user.ID,
+		Username: user.Username,
+		Points: user.Points,
+	}
+
 	c.JSON(http.StatusCreated, gin.H{
 		"status":  http.StatusCreated,
 		"message": "Successfully created user",
-		"data":    user,
+		"data": newUser,
 	})
 }
 
@@ -80,10 +68,15 @@ func OneUserHandler(c *gin.Context) {
 		return
 	}
 
+	foundUser := ReturnedUser{
+		ID: user.ID,
+		Username: user.Username,
+		Points: user.Points,
+	}
 	// Returns status ok for user if all goes well.
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
 		"message": "User found",
-		"data":    user,
+		"data":    foundUser,
 	})
 }
