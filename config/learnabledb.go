@@ -7,7 +7,6 @@ import (
 	models "learnable-be/models"
 
 	"github.com/go-pg/pg"
-	"github.com/joho/godotenv"
 )
 
 func Connect() *pg.DB {
