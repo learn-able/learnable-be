@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"learnable-be/models"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
