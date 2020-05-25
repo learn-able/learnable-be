@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	handlers "learnable-be/handlers"
+	models "learnable-be/models"
 
 	"github.com/go-pg/pg"
 	"github.com/joho/godotenv"
@@ -33,10 +33,12 @@ func Connect() *pg.DB {
 
 	log.Printf("Connected to Learnable Database")
 
-	tblErr := handlers.CreateUserTable(db)
+	tblErr := models.CreateUserTable(db)
 	if tblErr != nil {
 		panic(tblErr)
 	}
+
+	models.InitiateDB(db)
 
 	return db
 }

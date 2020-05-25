@@ -5,58 +5,83 @@ import (
 	"net/http"
 	"time"
 
+	models "learnable-be/models"
+
 	"github.com/gin-gonic/gin"
-	"github.com/go-pg/pg"
-	"github.com/go-pg/pg/orm"
 )
 
-// Defined user Struct for use in json responses
-type User struct {
-	ID        int       `json:"id" pg:"pk_id"`
-	Username  string    `json:"username" pg:",unique"`
-	Password  string    `json:"password"`
-	Points    int       `json:"points"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
+func AllUsersHandler(c *gin.Context) {
+	// Creates an array to hold all users
+	var users []models.User
 
-// Initialize users table for use in API
-func CreateUserTable(db *pg.DB) error {
-	// Only created this table if it doesn't already exist
-	options := &orm.CreateTableOptions{
-		IfNotExists: true,
-	}
-
-	// logs any errors for return later related to the creation of this users table
-	err := db.CreateTable(&User{}, options)
-
+	// Attempts a connection to the database to retrieve all users
+	//   returns an Internal SErver Error if a problem occurs
+	err := models.DBConnect.Model(&users).Select()
 	if err != nil {
-		log.Printf("Cannot create User table.\nReason: %v\n", err)
-		return err
+		log.Printf("Could not get all Users\nReason: %v\n", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status":  http.StatusInternalServerError,
+			"message": "Internal Server Error",
+		})
+		return
 	}
 
-	log.Printf("User table created successfully.")
-	return nil
+	// Returns a JSON response for the user that is created
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "All Learnable Users",
+		"data":    users,
+	})
 }
 
 func CreateUserHandler(c *gin.Context) {
+	// Create variable to hold the new user
+	var user models.User
+
+	// Grabs and assigns information retrieved from JSON body
+	// checks returned error for any probems
+	bindErr := c.BindJSON(&user)
+	if bindErr != nil {
+		panic(bindErr)
+	}
+
+	// stores incoming data in variables for struct assignment
+	username := user.Username
+	password := user.Password
+
+	// Inserts in to next row of table with new user
+	insertionError := models.DBConnect.Insert(&models.User{
+		ID:        user.ID,
+		Username:  username,
+		Password:  password,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	})
+
+	// Validates and parses error, returning an internal server error
+	if insertionError != nil {
+		log.Printf("Could not insert user\nReason: %v\n", insertionError)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status":  http.StatusInternalServerError,
+			"message": "Internal Server Error",
+		})
+		return
+	}
+
+	// Returns status ok and 201 if the use was successfully created
+	// Also returns new user.
+	c.JSON(http.StatusCreated, gin.H{
+		"status":  http.StatusCreated,
+		"message": "Successfully created user",
+		"data":    &user,
+	})
+}
+
+func EditUserHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  200,
-		"message": "CREATE ENDPOINT",
+		"message": "EDIT ENDPOINT",
 	})
-	return
-	// var newUser user
-	// reqBody, err := ioutil.ReadAll(r.Body)
-	// if err != nil {
-	// 	fmt.Fprintf(w, "Enter data for your new user")
-	// }
-
-	// json.Unmarshal(reqBody, &newUser)
-
-	// users = append(users, newUser)
-	// w.WriteHeader(http.StatusCreated)
-
-	// json.NewEncoder(w).Encode(newUser)
 }
 
 func OneUserHandler(c *gin.Context) {
@@ -64,7 +89,6 @@ func OneUserHandler(c *gin.Context) {
 		"status":  200,
 		"message": "SINGLE USER ENDPOINT",
 	})
-	return
 	// userID := mux.Vars(r)["id"]
 
 	// for _, oneUser := range users {
@@ -72,13 +96,4 @@ func OneUserHandler(c *gin.Context) {
 	// 		json.NewEncoder(w).Encode(oneUser)
 	// 	}
 	// }
-}
-
-func AllUsersHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"status":  200,
-		"message": "ALL USER ENDPOINT",
-	})
-	return
-	// json.NewEncoder(w).Encode(users)
 }
