@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	handlers "learnable-be/routes/handlers"
+	handlers "learnable-be/handlers"
 )
 
 func GetRoutes(router *gin.Engine) {
