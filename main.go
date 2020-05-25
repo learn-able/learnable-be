@@ -9,11 +9,18 @@ import (
 	routes "learnable-be/routes"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
 	port := getPort()
 	// gin.SetMode(gin.ReleaseMode)
+
+	// Add environment variables for use in db auth
+	envErr := godotenv.Load("application.env")
+	if envErr != nil {
+		log.Fatal("Error loading .env file")
+	}
 
 	database.Connect()
 
