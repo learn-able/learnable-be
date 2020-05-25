@@ -7,15 +7,21 @@ import (
 	handlers "learnable-be/handlers"
 
 	"github.com/go-pg/pg"
+	"github.com/joho/godotenv"
 )
 
 func Connect() *pg.DB {
-	// postgres setup options
+	// Add environment variables for use in db auth
+	envErr := godotenv.Load("application.env")
+	if envErr != nil {
+		log.Fatal("Error loading .env file")
+	}
+	// postgres setup parameters
 	options := &pg.Options{
-		User: "admin",
-		Password: "postgres",
-		Addr: "localhost:5432",
-		Database: "postgres",
+		User:     os.Getenv("DB_USER"),
+		Password: os.Getenv("DB_PASSWORD"),
+		Addr:     os.Getenv("DB_ADDRESS"),
+		Database: os.Getenv("DB_NAME"),
 	}
 
 	var db *pg.DB = pg.Connect(options)
@@ -27,6 +33,10 @@ func Connect() *pg.DB {
 
 	log.Printf("Connected to Learnable Database")
 
-	handlers.CreateUserTable(db)
+	tblErr := handlers.CreateUserTable(db)
+	if tblErr != nil {
+		panic(tblErr)
+	}
+
 	return db
 }
