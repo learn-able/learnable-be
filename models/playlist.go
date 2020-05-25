@@ -9,14 +9,14 @@ import (
 )
 
 type Playlist struct {
-	ID            int              `json:"id" pg:"pk_id"`
-	UserID        int              `json:"user_id"`
-	Title         string           `json:"title"`
-	Status        string           `json:"status"`
-	DueDate       string           `json:"due_date"`
-	PlaylistItems []*PlaylistItem `json:"items"`
-	CreatedAt     time.Time        `json:"created_at"`
-	UpdatedAt     time.Time        `json:"updated_at"`
+	ID            int             `json:"id" pg:"pk_id"`
+	UserID        int             `json:"user_id"`
+	Title         string          `json:"title"`
+	Status        string          `json:"status"`
+	DueDate       string          `json:"due_date"`
+	PlaylistItems []*PlaylistItem `json:"items" pg:",array"`
+	CreatedAt     time.Time       `json:"created_at"`
+	UpdatedAt     time.Time       `json:"updated_at"`
 }
 
 type PlaylistItem struct {

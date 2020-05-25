@@ -1,19 +1,27 @@
 package handlers
 
-import "github.com/gin-gonic/gin"
+import (
+	"learnable-be/models"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 type CreatePlaylistInput struct {
-	UserID  int    `json:"user_id"`
-	Title   string `json:"title"`
-	Status  string `json:"status"`
-	DueDate string `json:"due_date"`
+	UserID        int                    `json:"user_id"`
+	Title         string                 `json:"title"`
+	Status        string                 `json:"status"`
+	DueDate       string                 `json:"due_date"`
+	PlaylistItems []*models.PlaylistItem `json:"items"`
 }
 
 type ReturnedPlaylist struct {
-	UserID  int    `json:"user_id"`
-	Title   string `json:"title"`
-	Status  string `json:"status"`
-	DueDate string `json:"due_date"`
+	ID            int                    `json:"id"`
+	UserID        int                    `json:"user_id"`
+	Title         string                 `json:"title"`
+	Status        string                 `json:"status"`
+	DueDate       string                 `json:"due_date"`
+	PlaylistItems []*models.PlaylistItem `json:"playlist_items"`
 }
 
 func CreatePlaylist(c *gin.Context) {
