@@ -3,12 +3,17 @@ package handlers
 import (
 	"log"
 	"net/http"
-	"time"
+	"strconv"
 
 	models "learnable-be/models"
 
 	"github.com/gin-gonic/gin"
 )
+
+type CreateUserInput struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
 
 func AllUsersHandler(c *gin.Context) {
 	// Creates an array to hold all users
@@ -35,65 +40,50 @@ func AllUsersHandler(c *gin.Context) {
 }
 
 func CreateUserHandler(c *gin.Context) {
-	// Create variable to hold the new user
-	var user models.User
+	var input CreateUserInput
 
 	// Grabs and assigns information retrieved from JSON body
 	// checks returned error for any probems
-	bindErr := c.BindJSON(&user)
-	if bindErr != nil {
-		panic(bindErr)
-	}
-
-	// stores incoming data in variables for struct assignment
-	username := user.Username
-	password := user.Password
-
-	// Inserts in to next row of table with new user
-	insertionError := models.DBConnect.Insert(&models.User{
-		ID:        user.ID,
-		Username:  username,
-		Password:  password,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-	})
-
-	// Validates and parses error, returning an internal server error
-	if insertionError != nil {
-		log.Printf("Could not insert user\nReason: %v\n", insertionError)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  http.StatusInternalServerError,
-			"message": "Internal Server Error",
+	if bindErr := c.BindJSON(&input); bindErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": http.StatusBadRequest,
+			"error":  bindErr.Error(),
 		})
 		return
 	}
 
+	// Creates user
+	user := models.User{Username: input.Username, Password: input.Password}
+	models.DBConnect.Insert(&user)
 	// Returns status ok and 201 if the use was successfully created
 	// Also returns new user.
 	c.JSON(http.StatusCreated, gin.H{
 		"status":  http.StatusCreated,
 		"message": "Successfully created user",
-		"data":    &user,
-	})
-}
-
-func EditUserHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"status":  200,
-		"message": "EDIT ENDPOINT",
+		"data":    user,
 	})
 }
 
 func OneUserHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"status":  200,
-		"message": "SINGLE USER ENDPOINT",
-	})
-	// userID := mux.Vars(r)["id"]
+	db := models.DBConnect
+	userID, _ := strconv.Atoi(c.Param("id")) // Grab id from URI params and converts to int
+	user := &models.User{ID: userID}         // Retrieve user from db through model
 
-	// for _, oneUser := range users {
-	// 	if oneUser.ID == userID {
-	// 		json.NewEncoder(w).Encode(oneUser)
-	// 	}
-	// }
+	// // Verify errors on not found by selection
+	err := db.Select(user)
+	if err != nil {
+		log.Printf("Error retrieving user from database\nReason: %v\n", err)
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":  http.StatusNotFound,
+			"message": "User not found",
+		})
+		return
+	}
+
+	// Returns status ok for user if all goes well.
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "User found",
+		"data":    user,
+	})
 }
