@@ -3,37 +3,45 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 
-	"github.com/gorilla/mux"
+	database "learnable-be/config"
+	routes "learnable-be/routes"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	port := GetPort()
-	fmt.Println("Starting Learnable Service...")
+	// Dynamically dictates port for use with Heroku and other services
+	port := getPort()
 
-	fmt.Println("Started...")
-	fmt.Println("Listening on Port: " + port)
+	// Connects to the postgres database
+	database.Connect()
 
-	router := mux.NewRouter().StrictSlash(true)
+	// Start the gin Default router.
+	//    Starts a gin.Engine() instance with Logging and Recovery function
+	router := gin.Default()
 
-	NewRouter(router)
-	err := http.ListenAndServe(port, router)
-	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
-	}
+	// Retrieves all routes based on the routes local package
+	routes.GetRoutes(router)
 
-	fmt.Println("Service Terminated...")
+	// Logs a fatal response or will run the gin Default router with the port
+	//   created by the local getPort function
+	//   This is the normal gin way of error handling this process
+	log.Fatal(router.Run(port))
 }
 
-func GetPort() string {
+func getPort() string {
+	// Checks the local environment for an environment variable called "PORT"
 	var port = os.Getenv("PORT")
 
+	// If the port doesn't exist, it will assign :4747 as the port number
+	//    If it does, like in Heroku, then it will use whatever is defined there
 	if port == "" {
 		port = "4747"
 		fmt.Println("INFO: No PORT environment variable detected, defaulting to " + port)
 	}
 
+	// Returns the port number appended with a colon(:).
 	return ":" + port
 }
