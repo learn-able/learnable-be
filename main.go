@@ -7,6 +7,7 @@ import (
 
 	database "learnable-be/config"
 	routes "learnable-be/routes"
+	_ "github.com/lib/pq"
 
 	"github.com/gin-gonic/gin"
 )
