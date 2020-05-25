@@ -11,7 +11,7 @@ import (
 // Defined user Struct for use in json responses
 type User struct {
 	ID        int       `json:"id" pg:"pk_id"`
-	Username  string    `json:"username" pg:",unique"`
+	Username  string    `json:"username" pg:"unique"`
 	Password  string    `json:"password"`
 	Points    int       `json:"points"`
 	CreatedAt time.Time `json:"created_at"`
