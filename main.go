@@ -14,7 +14,7 @@ import (
 
 func main() {
 	port := getPort()
-	gin.SetMode(gin.ReleaseMode)
+	// gin.SetMode(gin.ReleaseMode)
 
 	// Add environment variables for use in db auth
 	envErr := godotenv.Load("application.env")
