@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	database "learnable-be/config"
 	routes "learnable-be/routes"
 
 	"github.com/gin-gonic/gin"
@@ -13,6 +14,9 @@ import (
 func main() {
 	// Dynamically dictates port for use with Heroku and other services
 	port := getPort()
+
+	// Connects to the postgres database
+	database.Connect()
 
 	// Start the gin Default router.
 	//    Starts a gin.Engine() instance with Logging and Recovery function
@@ -38,6 +42,6 @@ func getPort() string {
 		fmt.Println("INFO: No PORT environment variable detected, defaulting to " + port)
 	}
 
-	// Returns the port number appended with a colon(:)
+	// Returns the port number appended with a colon(:).
 	return ":" + port
 }
