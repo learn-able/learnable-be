@@ -22,7 +22,6 @@ func Connect() *pg.DB {
 		Password: os.Getenv("DB_PASSWORD"),
 		Addr:     os.Getenv("DB_ADDRESS"),
 		Database: os.Getenv("DB_NAME"),
-		DatabaseURL: os.Getenv("DATABASE_URL"),
 	}
 
 	var db *pg.DB = pg.Connect(options)
