@@ -4,7 +4,7 @@
 *.dll
 *.so
 *.dylib
-/bin
+learnable_be/bin/
 
 # Test binaries
 *.test
@@ -14,3 +14,4 @@
 
 # environment stuff
 application.env
+bin/learnableBE
