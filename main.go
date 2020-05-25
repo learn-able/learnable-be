@@ -3,31 +3,24 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 
-	"github.com/gorilla/mux"
+	routes "learnable-be/routes"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	port := GetPort()
-	fmt.Println("Starting Learnable Service...")
+	port := getPort()
 
-	fmt.Println("Started...")
-	fmt.Println("Listening on Port: " + port)
+	router := gin.Default()
 
-	router := mux.NewRouter().StrictSlash(true)
+	routes.GetRoutes(router)
 
-	NewRouter(router)
-	err := http.ListenAndServe(port, router)
-	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
-	}
-
-	fmt.Println("Service Terminated...")
+	log.Fatal(router.Run(port))
 }
 
-func GetPort() string {
+func getPort() string {
 	var port = os.Getenv("PORT")
 
 	if port == "" {
