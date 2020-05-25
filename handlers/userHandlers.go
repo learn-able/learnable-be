@@ -12,10 +12,10 @@ import (
 
 // Defined user Struct for use in json responses
 type User struct {
-	ID       	int 			`json:"id" pg:"pk_id"`
-	Username 	string 		`json:"username" pg:",unique"`
-	Password	string		`json:"password"`
-	Points   	int    		`json:"points"`
+	ID        int       `json:"id" pg:"pk_id"`
+	Username  string    `json:"username" pg:",unique"`
+	Password  string    `json:"password"`
+	Points    int       `json:"points"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -43,8 +43,8 @@ func CreateUserHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  200,
 		"message": "CREATE ENDPOINT",
-		})
-		return
+	})
+	return
 	// var newUser user
 	// reqBody, err := ioutil.ReadAll(r.Body)
 	// if err != nil {
@@ -63,8 +63,8 @@ func OneUserHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  200,
 		"message": "SINGLE USER ENDPOINT",
-		})
-		return
+	})
+	return
 	// userID := mux.Vars(r)["id"]
 
 	// for _, oneUser := range users {
@@ -78,7 +78,7 @@ func AllUsersHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  200,
 		"message": "ALL USER ENDPOINT",
-		})
-		return
+	})
+	return
 	// json.NewEncoder(w).Encode(users)
 }
