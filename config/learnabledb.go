@@ -30,8 +30,7 @@ func Connect() *pg.DB {
 	db := pg.Connect(pgOptions)
 	// END HEROKU DEPLOYMENT
 
-	// postgres setup parameters
-	//   Use for local config ONLY
+	// LOCAL CONFIG
 	// options := &pg.Options{
 	// 	User:     os.Getenv("DB_USER"),
 	// 	Password: os.Getenv("DB_PASSWORD"),
@@ -40,7 +39,7 @@ func Connect() *pg.DB {
 	// }
 
 	// var db := pg.Connect(options)
-	// End of local config block
+	// END LOCAL CONFIG
 
 	if db == nil {
 		log.Printf("Could not connect to Learnable Database")
