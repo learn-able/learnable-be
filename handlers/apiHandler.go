@@ -7,10 +7,17 @@ import (
 )
 
 // IndexHandlers returns a json response for the index location of the API with welcome and status.
-func Index(c *gin.Context) {
+func APIIndex(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
-		"status":  200,
+		"status":  http.StatusOK,
 		"message": "Welcome To Learnable API",
 		})
 		return
+}
+
+func AppIndex(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"status": http.StatusOK,
+		"message": "Welcome to Learnable"
+	})
 }

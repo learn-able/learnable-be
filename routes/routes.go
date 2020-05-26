@@ -7,8 +7,11 @@ import (
 )
 
 func GetRoutes(router *gin.Engine) {
+	// Application
+	router.GET("/", handlers.AppIndex)
+
 	// API Index
-	router.GET("/api/v0", handlers.Index)
+	router.GET("/api/v0", handlers.APIIndex)
 
 	// User related routes
 	router.POST("/api/v0/users", handlers.CreateUser)
