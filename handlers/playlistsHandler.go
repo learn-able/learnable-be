@@ -122,10 +122,9 @@ func PlaylistsByStatus(c *gin.Context) {
 
 func ShowPlaylist(c *gin.Context) {
 	db := models.PlaylistConnect
-	playlistID, _ := strconv.Atoi(c.Param("id")) // Grab id from URI params and converts to int
-	playlist := &models.Playlist{ID: playlistID} // Retrieve Playlist from db through model
+	playlistID, _ := strconv.Atoi(c.Param("id"))
+	playlist := &models.Playlist{ID: playlistID}
 
-	// // Verify errors on not found by selection
 	err := db.Select(playlist)
 	if err != nil {
 		log.Printf("Error retrieving Playlist from database\nReason: %v\n", err)
@@ -144,7 +143,7 @@ func ShowPlaylist(c *gin.Context) {
 		DueDate:       playlist.DueDate,
 		PlaylistItems: playlist.PlaylistItems,
 	}
-	// Returns status ok for Playlist if all goes well.
+	
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
 		"message": "Playlist found",
