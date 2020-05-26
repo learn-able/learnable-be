@@ -37,6 +37,7 @@ func CreateUser(c *gin.Context) {
 	// Creates user
 	user := models.User{Username: input.Username, Password: input.Password}
 	models.UserConnect.Insert(&user)
+
 	// Returns status ok and 201 if the use was successfully created
 	// Also returns new user.
 	newUser := ReturnedUser{
