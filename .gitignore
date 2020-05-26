@@ -12,5 +12,4 @@
 *.out
 
 # environment stuff
-application.env
 bin/

@@ -19,7 +19,7 @@ type User struct {
 }
 
 // instance variable used for this models connection to the db
-var DBConnect *pg.DB
+var UserConnect *pg.DB
 
 // Initialize users table for use in API
 func CreateUserTable(db *pg.DB) error {
@@ -40,6 +40,6 @@ func CreateUserTable(db *pg.DB) error {
 	return nil
 }
 
-func InitiateDB(db *pg.DB) {
-	DBConnect = db
+func InitiateUserDB(db *pg.DB) {
+	UserConnect = db
 }
