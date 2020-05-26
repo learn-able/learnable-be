@@ -61,7 +61,32 @@ func CreatePlaylist(c *gin.Context) {
 }
 
 func UserPlaylists(c *gin.Context) {
-	// TODO
+	var input CreatePlaylistInput
+
+	if bindErr := c.BindJSON(&input); bindErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": http.StatusBadRequest,
+			"error":  bindErr.Error(),
+		})
+		return
+	}
+
+	var playlists []models.Playlist
+
+	err := models.PlaylistConnect.
+		Model(&playlists).
+		Where("user_id = ?", input.UserID).
+		Select()
+
+	if err != nil {
+		panic(err)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "All playlists",
+		"data":    &playlists,
+	})
 }
 
 func ShowPlaylist(c *gin.Context) {
