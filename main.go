@@ -8,18 +8,18 @@ import (
 	database "learnable-be/config"
 	routes "learnable-be/routes"
 
-	"github.com/joho/godotenv"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	port := getPort()
-	// gin.SetMode(gin.ReleaseMode) // set for production
+	gin.SetMode(gin.ReleaseMode) // set for production
 
 	// LOCAL CONFIG
-	envErr := godotenv.Load("application.yml")
-	if envErr != nil {
-		log.Fatal("Error loading .yml file")
-	}
+	// envErr := godotenv.Load("application.yml")
+	// if envErr != nil {
+	// 	log.Fatal("Error loading .yml file")
+	// }
 	// END LOCAL CONFIG
 
 	database.Connect()
