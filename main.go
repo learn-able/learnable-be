@@ -19,7 +19,7 @@ func main() {
 	// Add environment variables for use in db auth
 	envErr := godotenv.Load("application.yml")
 	if envErr != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal("Error loading .yml file")
 	}
 
 	database.Connect()
