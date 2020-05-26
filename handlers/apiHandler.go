@@ -18,6 +18,6 @@ func APIIndex(c *gin.Context) {
 func AppIndex(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status": http.StatusOK,
-		"message": "Welcome to Learnable"
+		"message": "Welcome to Learnable",
 	})
 }
