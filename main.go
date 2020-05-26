@@ -9,6 +9,7 @@ import (
 	routes "learnable-be/routes"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -16,10 +17,10 @@ func main() {
 	// gin.SetMode(gin.ReleaseMode) // set for production
 
 	// LOCAL CONFIG
-	// envErr := godotenv.Load("application.yml")
-	// if envErr != nil {
-	// 	log.Fatal("Error loading .yml file")
-	// }
+	envErr := godotenv.Load("application.yml")
+	if envErr != nil {
+		log.Fatal("Error loading .yml file")
+	}
 	// END LOCAL CONFIG
 
 	database.Connect()
