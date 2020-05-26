@@ -1,5 +1,0 @@
-DB_USER: "alerrian"
-DB_PASSWORD: "postgres"
-DB_ADDRESS: "localhost:5432"
-DB_NAME: "postgres"
-DATABASE_URL: "postgres://crmpuvapqisfaw:17217c3b2f1fb1050c7193b9a68aa25c10325b3b09386042b9f01c007dbe4782@ec2-52-7-39-178.compute-1.amazonaws.com:5432/df6bsntps9tenm"

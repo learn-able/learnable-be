@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"net/url"
 	"os"
 
 	models "learnable-be/models"
@@ -10,15 +11,35 @@ import (
 )
 
 func Connect() *pg.DB {
-	// postgres setup parameters
-	options := &pg.Options{
-		User:     os.Getenv("DB_USER"),
-		Password: os.Getenv("DB_PASSWORD"),
-		Addr:     os.Getenv("DB_ADDRESS"),
-		Database: os.Getenv("DB_NAME"),
+	// For HEROKU DEPLOYMENT
+	parsedUrl, err := url.Parse(os.Getenv("DATABASE_URL"))
+	if err != nil {
+		panic(err)
 	}
 
-	var db *pg.DB = pg.Connect(options)
+	pgOptions := &pg.Options{
+		User:     parsedUrl.User.Username(),
+		Database: parsedUrl.Path[1:],
+		Addr:     parsedUrl.Host,
+	}
+
+	if password, ok := parsedUrl.User.Password(); ok {
+		pgOptions.Password = password
+	}
+
+	db := pg.Connect(pgOptions)
+	// END HEROKU DEPLOYMENT
+
+	// LOCAL CONFIG
+	// options := &pg.Options{
+	// 	User:     os.Getenv("DB_USER"),
+	// 	Password: os.Getenv("DB_PASSWORD"),
+	// 	Addr:     os.Getenv("DB_ADDRESS"),
+	// 	Database: os.Getenv("DB_NAME"),
+	// }
+
+	// var db := pg.Connect(options)
+	// END LOCAL CONFIG
 
 	if db == nil {
 		log.Printf("Could not connect to Learnable Database")
@@ -38,7 +59,7 @@ func createTables(db *pg.DB) {
 	}
 
 	models.InitiateUserDB(db)
-	
+
 	if playlistTblErr := models.CreatePlaylistTable(db); playlistTblErr != nil {
 		panic(playlistTblErr)
 	}
