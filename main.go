@@ -17,7 +17,7 @@ func main() {
 	// gin.SetMode(gin.ReleaseMode)
 
 	// Add environment variables for use in db auth
-	envErr := godotenv.Load("application.env")
+	envErr := godotenv.Load("application.yml")
 	if envErr != nil {
 		log.Fatal("Error loading .env file")
 	}

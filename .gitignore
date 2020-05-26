@@ -12,4 +12,6 @@
 *.out
 
 # environment stuff
+application.env
+application.yml
 bin/
