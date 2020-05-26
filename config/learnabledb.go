@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"os"
+	"strings"
 
 	models "learnable-be/models"
 
@@ -10,15 +11,34 @@ import (
 )
 
 func Connect() *pg.DB {
-	// postgres setup parameters
-	options := &pg.Options{
-		User:     os.Getenv("DB_USER"),
-		Password: os.Getenv("DB_PASSWORD"),
-		Addr:     os.Getenv("DB_ADDRESS"),
-		Database: os.Getenv("DB_NAME"),
-	}
+	url := os.Getenv("DATABASE_URL")
+	url = strings.TrimPrefix(url, "postgres://")
 
-	var db *pg.DB = pg.Connect(options)
+	dbNameStartsAt := strings.LastIndex(url, "/") + 1
+	database := url[dbNameStartsAt:]
+	url = url[:dbNameStartsAt-1]
+
+	authAndHost := strings.Split(url, "@")
+	auth := strings.Split(authAndHost[0], ":")
+	username := auth[0]
+	password := auth[1]
+	hostAndPort := authAndHost[1]
+
+	db := pg.Connect(&pg.Options{
+		User:     username,
+		Password: password,
+		Database: database,
+		Addr:     hostAndPort,
+	})
+	// postgres setup parameters
+	// options := &pg.Options{
+	// 	User:     os.Getenv("DB_USER"),
+	// 	Password: os.Getenv("DB_PASSWORD"),
+	// 	Addr:     os.Getenv("DB_ADDRESS"),
+	// 	Database: os.Getenv("DB_NAME"),
+	// }
+
+	// var db *pg.DB = pg.Connect(options)
 
 	if db == nil {
 		log.Printf("Could not connect to Learnable Database")
@@ -38,7 +58,7 @@ func createTables(db *pg.DB) {
 	}
 
 	models.InitiateUserDB(db)
-	
+
 	if playlistTblErr := models.CreatePlaylistTable(db); playlistTblErr != nil {
 		panic(playlistTblErr)
 	}
