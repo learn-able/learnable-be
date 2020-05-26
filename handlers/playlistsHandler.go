@@ -40,7 +40,9 @@ func CreatePlaylist(c *gin.Context) {
 		Status:  "valid",
 		DueDate: input.DueDate,
 	}
-	models.PlaylistConnect.Insert(&playlist)
+	if err := models.PlaylistConnect.Insert(&playlist); err != nil {
+		panic(err)
+	}
 
 	newPlaylist := ReturnedPlaylist{
 		ID:            playlist.ID,
