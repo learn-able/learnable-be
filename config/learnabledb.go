@@ -2,8 +2,8 @@ package config
 
 import (
 	"log"
+	"net/url"
 	"os"
-	"strings"
 
 	models "learnable-be/models"
 
@@ -11,26 +11,27 @@ import (
 )
 
 func Connect() *pg.DB {
-	url := os.Getenv("DATABASE_URL")
-	url = strings.TrimPrefix(url, "postgres://")
+	// For HEROKU DEPLOYMENT
+	parsedUrl, err := url.Parse(os.Getenv("DATABASE_URL"))
+	if err != nil {
+		panic(err)
+	}
 
-	dbNameStartsAt := strings.LastIndex(url, "/") + 1
-	database := url[dbNameStartsAt:]
-	url = url[:dbNameStartsAt-1]
+	pgOptions := &pg.Options{
+		User:     parsedUrl.User.Username(),
+		Database: parsedUrl.Path[1:],
+		Addr:     parsedUrl.Host,
+	}
 
-	authAndHost := strings.Split(url, "@")
-	auth := strings.Split(authAndHost[0], ":")
-	username := auth[0]
-	password := auth[1]
-	hostAndPort := authAndHost[1]
+	if password, ok := parsedUrl.User.Password(); ok {
+		pgOptions.Password = password
+	}
 
-	db := pg.Connect(&pg.Options{
-		User:     username,
-		Password: password,
-		Database: database,
-		Addr:     hostAndPort,
-	})
+	db := pg.Connect(pgOptions)
+	// END HEROKU DEPLOYMENT
+
 	// postgres setup parameters
+	//   Use for local config ONLY
 	// options := &pg.Options{
 	// 	User:     os.Getenv("DB_USER"),
 	// 	Password: os.Getenv("DB_PASSWORD"),
@@ -38,7 +39,8 @@ func Connect() *pg.DB {
 	// 	Database: os.Getenv("DB_NAME"),
 	// }
 
-	// var db *pg.DB = pg.Connect(options)
+	// var db := pg.Connect(options)
+	// End of local config block
 
 	if db == nil {
 		log.Printf("Could not connect to Learnable Database")
