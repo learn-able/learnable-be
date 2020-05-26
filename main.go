@@ -8,7 +8,6 @@ import (
 	database "learnable-be/config"
 	routes "learnable-be/routes"
 
-	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
@@ -25,9 +24,7 @@ func main() {
 
 	database.Connect()
 
-	router := gin.Default()
-
-	routes.GetRoutes(router)
+	router := routes.GetRoutes()
 
 	log.Fatal(router.Run(port))
 }
