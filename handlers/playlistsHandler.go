@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"learnable-be/models"
+	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -84,11 +86,68 @@ func UserPlaylists(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
-		"message": "All playlists",
+		"message": "All playlists by User",
+		"data":    &playlists,
+	})
+}
+
+func PlaylistsByStatus(c *gin.Context) {
+	var input CreatePlaylistInput
+
+	if bindErr := c.BindJSON(&input); bindErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": http.StatusBadRequest,
+			"error":  bindErr.Error(),
+		})
+		return
+	}
+
+	var playlists []models.Playlist
+
+	err := models.PlaylistConnect.
+		Model(&playlists).
+		Where("user_id = ? AND status = ?", input.UserID, input.Status).
+		Select()
+
+	if err != nil {
+		panic(err)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "All playlists by Status",
 		"data":    &playlists,
 	})
 }
 
 func ShowPlaylist(c *gin.Context) {
-	// TODO
+	db := models.PlaylistConnect
+	playlistID, _ := strconv.Atoi(c.Param("id")) // Grab id from URI params and converts to int
+	playlist := &models.Playlist{ID: playlistID} // Retrieve Playlist from db through model
+
+	// // Verify errors on not found by selection
+	err := db.Select(playlist)
+	if err != nil {
+		log.Printf("Error retrieving Playlist from database\nReason: %v\n", err)
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":  http.StatusNotFound,
+			"message": "Playlist not found",
+		})
+		return
+	}
+
+	foundPlaylist := ReturnedPlaylist{
+		ID:            playlist.ID,
+		UserID:        playlist.UserID,
+		Title:         playlist.Title,
+		Status:        playlist.Status,
+		DueDate:       playlist.DueDate,
+		PlaylistItems: playlist.PlaylistItems,
+	}
+	// Returns status ok for Playlist if all goes well.
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Playlist found",
+		"data":    foundPlaylist,
+	})
 }
