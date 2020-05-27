@@ -2,12 +2,24 @@ package routes
 
 import (
 	handlers "learnable-be/handlers"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	cors "github.com/itsjamie/gin-cors"
 )
 
 func GetRoutes() *gin.Engine {
 	router := gin.Default()
+
+	router.Use(cors.Middleware(cors.Config{
+		Origins:         "*",
+		Methods:         "GET, PUT, POST, DELETE",
+		RequestHeaders:  "Origin, Authorization, Content-Type",
+		ExposedHeaders:  "",
+		MaxAge:          50 * time.Second,
+		Credentials:     true,
+		ValidateHeaders: false,
+	}))
 
 	// Application
 	router.GET("/", handlers.AppIndex)
