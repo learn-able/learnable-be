@@ -10,6 +10,7 @@ import (
 )
 
 type CreatePlaylistInput struct {
+	ID      int    `json:"id"`
 	UserID  int    `json:"user_id"`
 	Title   string `json:"title"`
 	Status  string `json:"status"`
@@ -143,10 +144,54 @@ func ShowPlaylist(c *gin.Context) {
 		DueDate:       playlist.DueDate,
 		PlaylistItems: playlist.PlaylistItems,
 	}
-	
+
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
 		"message": "Playlist found",
+		"data":    foundPlaylist,
+	})
+}
+
+func UpdatePlaylistStatus(c *gin.Context)  {
+	var input CreatePlaylistInput
+
+	if bindErr := c.BindJSON(&input); bindErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": http.StatusBadRequest,
+			"error":  bindErr.Error(),
+		})
+		return
+	}
+
+	playlistID, _ := strconv.Atoi(c.Param("id"))
+
+	playlist := models.Playlist{
+		UserID:  input.UserID,
+		Title:   input.Title,
+		Status:  input.Status,
+		DueDate: input.DueDate,
+	}
+
+	_, err := models.PlaylistConnect.Model(&playlist).
+																   Where("id = ?", playlistID).
+																   Update(&playlist)
+
+	if err != nil {
+		panic(err)
+	}
+
+	foundPlaylist := ReturnedPlaylist{
+		ID:            playlistID,
+		UserID:        playlist.UserID,
+		Title:         playlist.Title,
+		Status:        playlist.Status,
+		DueDate:       playlist.DueDate,
+		PlaylistItems: playlist.PlaylistItems,
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Playlist updated",
 		"data":    foundPlaylist,
 	})
 }
