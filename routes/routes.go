@@ -6,7 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetRoutes(router *gin.Engine) {
+func GetRoutes() *gin.Engine {
+	router := gin.Default()
+
 	// Application
 	router.GET("/", handlers.AppIndex)
 
@@ -21,4 +23,7 @@ func GetRoutes(router *gin.Engine) {
 	router.POST("/api/v0/playlists", handlers.CreatePlaylist)
 	router.GET("/api/v0/playlists", handlers.UserPlaylists)
 	router.GET("/api/v0/playlists/:id", handlers.ShowPlaylist)
+	router.GET("/api/v0/playlists-status", handlers.PlaylistsByStatus)
+
+	return router
 }

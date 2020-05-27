@@ -12,7 +12,6 @@ func APIIndex(c *gin.Context) {
 		"status":  http.StatusOK,
 		"message": "Welcome To Learnable API",
 		})
-		return
 }
 
 func AppIndex(c *gin.Context) {

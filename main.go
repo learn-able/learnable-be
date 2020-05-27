@@ -13,7 +13,7 @@ import (
 
 func main() {
 	port := getPort()
-	// gin.SetMode(gin.ReleaseMode) // set for production
+	gin.SetMode(gin.ReleaseMode) // set for production
 
 	// LOCAL CONFIG
 	// envErr := godotenv.Load("application.yml")
@@ -24,9 +24,7 @@ func main() {
 
 	database.Connect()
 
-	router := gin.Default()
-
-	routes.GetRoutes(router)
+	router := routes.GetRoutes()
 
 	log.Fatal(router.Run(port))
 }

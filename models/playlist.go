@@ -19,17 +19,6 @@ type Playlist struct {
 	UpdatedAt     time.Time       `json:"updated_at"`
 }
 
-type PlaylistItem struct {
-	ID          int       `json:"id" pg:"pk_id"`
-	PlaylistID  int       `json:"playlist_id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	URL         string    `json:"url"`
-	IsComplete  bool      `json:"is_complete"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
-}
-
 var PlaylistConnect *pg.DB
 
 func CreatePlaylistTable(db *pg.DB) error {

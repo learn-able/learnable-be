@@ -38,7 +38,7 @@ func Connect() *pg.DB {
 	// 	Database: os.Getenv("DB_NAME"),
 	// }
 
-	// var db := pg.Connect(options)
+	// db := pg.Connect(options)
 	// END LOCAL CONFIG
 
 	if db == nil {
@@ -65,4 +65,10 @@ func createTables(db *pg.DB) {
 	}
 
 	models.InitiatePlaylistDB(db)
+
+	if playlistItemTblErr := models.CreatePlaylistItemTable(db); playlistItemTblErr != nil {
+		panic(playlistItemTblErr)
+	}
+
+	models.InitiatePlaylistItemDB(db)
 }
