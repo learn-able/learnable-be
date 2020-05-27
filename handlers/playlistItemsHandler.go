@@ -94,3 +94,32 @@ func ShowPlaylistItem(c *gin.Context) {
 		"data":    foundPlaylistItem,
 	})
 }
+
+func PlaylistItems(c *gin.Context) {
+	var input CreatePlaylistItemInput
+
+	if bindErr := c.BindJSON(&input); bindErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": http.StatusBadRequest,
+			"error":  bindErr.Error(),
+		})
+		return
+	}
+
+	var playlistItems []models.PlaylistItem
+
+	err := models.PlaylistItemConnect.
+		Model(&playlistItems).
+		Where("playlist_id = ?", input.PlaylistID).
+		Select()
+
+	if err != nil {
+		panic(err)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "All playlists items by playlist",
+		"data":    &playlistItems,
+	})
+}
