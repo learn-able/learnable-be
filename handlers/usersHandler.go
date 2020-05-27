@@ -24,8 +24,6 @@ type ReturnedUser struct {
 func CreateUser(c *gin.Context) {
 	var input CreateUserInput
 
-	// Grabs and assigns information retrieved from JSON body
-	// checks returned error for any probems
 	if bindErr := c.BindJSON(&input); bindErr != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": http.StatusBadRequest,
@@ -34,14 +32,11 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	// Creates user
 	user := models.User{Username: input.Username, Password: input.Password}
 	if err := models.UserConnect.Insert(&user); err != nil {
 		panic(err)
 	}
 
-	// Returns status ok and 201 if the use was successfully created
-	// Also returns new user.
 	newUser := ReturnedUser{
 		ID:       user.ID,
 		Username: user.Username,
