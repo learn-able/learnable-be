@@ -21,7 +21,7 @@ type ReturnedPlaylistItem struct {
 	ID            int       `json:"id" pg:"pk_id"`
 	PlaylistID    int       `json:"playlist_id"`
 	Name          string    `json:"name"`
-	Description   string    `json:"description"`
+	Description   string    `json:"description,omitempty"`
 	URL           string    `json:"url"`
   IsComplete    bool      `json:"is_complete"`
 }
@@ -42,7 +42,7 @@ func CreatePlaylistItem(c *gin.Context) {
     Name:        input.Name,
   	Description: input.Description,
   	URL:         input.URL,
-  	IsComplete:  input.IsComplete,
+  	IsComplete:  false,
 	}
 	if err := models.PlaylistItemConnect.Insert(&playlistItem); err != nil {
 		panic(err)

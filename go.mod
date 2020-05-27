@@ -6,6 +6,7 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-pg/pg v8.0.6+incompatible
 	github.com/go-pg/pg/v9 v9.1.6 // indirect
+	github.com/go-playground/assert/v2 v2.0.1
 	github.com/google/uuid v1.1.1
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/joho/godotenv v1.3.0

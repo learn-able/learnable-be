@@ -10,7 +10,7 @@ import (
 func APIIndex(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
-		"message": "Welcome To Learnable API",
+		"message": "Welcome to Learnable API",
 		})
 }
 
