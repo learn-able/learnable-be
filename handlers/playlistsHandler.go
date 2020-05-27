@@ -152,7 +152,7 @@ func ShowPlaylist(c *gin.Context) {
 	})
 }
 
-func UpdatePlaylistStatus(c *gin.Context)  {
+func UpdatePlaylist(c *gin.Context)  {
 	var input CreatePlaylistInput
 
 	if bindErr := c.BindJSON(&input); bindErr != nil {
