@@ -12,6 +12,7 @@ import (
 type CreatePlaylistItemInput struct {
 	PlaylistID  int       `json:"playlist_id"`
   Name        string    `json:"name"`
+	Category    string    `json:"category"`
 	Description string    `json:"description"`
 	URL         string    `json:"url"`
 	IsComplete  bool      `json:"is_complete"`
@@ -21,6 +22,7 @@ type ReturnedPlaylistItem struct {
 	ID            int       `json:"id" pg:"pk_id"`
 	PlaylistID    int       `json:"playlist_id"`
 	Name          string    `json:"name"`
+	Category      string    `json:"category"`
 	Description   string    `json:"description,omitempty"`
 	URL           string    `json:"url"`
   IsComplete    bool      `json:"is_complete"`
@@ -40,6 +42,7 @@ func CreatePlaylistItem(c *gin.Context) {
 	playlistItem := models.PlaylistItem{
     PlaylistID:  input.PlaylistID,
     Name:        input.Name,
+		Category:    input.Category,
   	Description: input.Description,
   	URL:         input.URL,
   	IsComplete:  false,
@@ -52,6 +55,7 @@ func CreatePlaylistItem(c *gin.Context) {
     ID:             playlistItem.ID,
   	PlaylistID:     playlistItem.PlaylistID,
   	Name:           playlistItem.Name,
+		Category:       playlistItem.Category,
   	Description:    playlistItem.Description,
   	URL:            playlistItem.URL,
     IsComplete:     playlistItem.IsComplete,
@@ -83,6 +87,7 @@ func ShowPlaylistItem(c *gin.Context) {
     ID:             playlistItem.ID,
   	PlaylistID:     playlistItem.PlaylistID,
   	Name:           playlistItem.Name,
+		Category:       playlistItem.Category,
   	Description:    playlistItem.Description,
   	URL:            playlistItem.URL,
     IsComplete:     playlistItem.IsComplete,
