@@ -11,9 +11,9 @@ import (
 type Playlist struct {
 	ID            int             `json:"id" pg:"pk_id"`
 	UserID        int             `json:"user_id"`
-	Title         string          `json:"title,omitempty"`
-	Status        string          `json:"status,omitempty"`
-	DueDate       string          `json:"due_date,omitempty"`
+	Title         string          `json:"title"`
+	Status        string          `json:"status"`
+	DueDate       string          `json:"due_date"`
 	PlaylistItems []*PlaylistItem `json:"playlist_items"`
 	CreatedAt     time.Time       `json:"created_at"`
 	UpdatedAt     time.Time       `json:"updated_at"`

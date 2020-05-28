@@ -113,7 +113,7 @@ func PlaylistsByStatus(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-
+	
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
 		"message": "All playlists by Status",
