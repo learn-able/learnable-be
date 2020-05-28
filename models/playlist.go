@@ -14,7 +14,7 @@ type Playlist struct {
 	Title         string          `json:"title,omitempty"`
 	Status        string          `json:"status,omitempty"`
 	DueDate       string          `json:"due_date,omitempty"`
-	PlaylistItems []*PlaylistItem `json:"items"`
+	PlaylistItems []*PlaylistItem `json:"playlist_items"`
 	CreatedAt     time.Time       `json:"created_at"`
 	UpdatedAt     time.Time       `json:"updated_at"`
 }

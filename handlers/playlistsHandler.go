@@ -53,7 +53,7 @@ func CreatePlaylist(c *gin.Context) {
 		Title:         playlist.Title,
 		Status:        playlist.Status,
 		DueDate:       playlist.DueDate,
-		PlaylistItems: playlist.PlaylistItems,
+		PlaylistItems: []*models.PlaylistItem{},
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
@@ -134,7 +134,7 @@ func ShowPlaylist(c *gin.Context) {
 		Title:         playlist.Title,
 		Status:        playlist.Status,
 		DueDate:       playlist.DueDate,
-		PlaylistItems: playlist.PlaylistItems,
+		PlaylistItems: []*models.PlaylistItem{},
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -144,7 +144,7 @@ func ShowPlaylist(c *gin.Context) {
 	})
 }
 
-func UpdatePlaylist(c *gin.Context)  {
+func UpdatePlaylist(c *gin.Context) {
 	var input CreatePlaylistInput
 
 	if bindErr := c.BindJSON(&input); bindErr != nil {
@@ -165,8 +165,8 @@ func UpdatePlaylist(c *gin.Context)  {
 	}
 
 	_, err := models.PlaylistConnect.Model(&playlist).
-																   Where("id = ?", playlistID).
-																   Update(&playlist)
+		Where("id = ?", playlistID).
+		Update(&playlist)
 
 	if err != nil {
 		panic(err)
@@ -178,7 +178,7 @@ func UpdatePlaylist(c *gin.Context)  {
 		Title:         playlist.Title,
 		Status:        playlist.Status,
 		DueDate:       playlist.DueDate,
-		PlaylistItems: playlist.PlaylistItems,
+		PlaylistItems: []*models.PlaylistItem{},
 	}
 
 	c.JSON(http.StatusOK, gin.H{
