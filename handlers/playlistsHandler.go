@@ -85,31 +85,25 @@ func UserPlaylists(c *gin.Context) {
 }
 
 func PlaylistsByStatus(c *gin.Context) {
-	var input CreatePlaylistInput
-
-	if bindErr := c.BindJSON(&input); bindErr != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status": http.StatusBadRequest,
-			"error":  bindErr.Error(),
-		})
-		return
-	}
+	q := c.Request.URL.Query()
+	status := q.Get("status")
+	userID := q.Get("user_id")
 
 	var playlists []models.Playlist
 
 	err := models.PlaylistConnect.
 		Model(&playlists).
-		Where("user_id = ? AND status = ?", input.UserID, input.Status).
+		Where("user_id = ? AND status = ?", userID, status).
 		Select()
 
 	if err != nil {
 		panic(err)
 	}
-
+	
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
 		"message": "All playlists by Status",
-		"data":    &playlists,
+		"data":    playlists,
 	})
 }
 
