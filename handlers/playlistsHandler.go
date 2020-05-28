@@ -65,6 +65,7 @@ func CreatePlaylist(c *gin.Context) {
 
 func UserPlaylists(c *gin.Context) {
 	var input CreatePlaylistInput
+	userID, _ := strconv.Atoi(c.Param("id"))
 
 	if bindErr := c.BindJSON(&input); bindErr != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -78,7 +79,7 @@ func UserPlaylists(c *gin.Context) {
 
 	err := models.PlaylistConnect.
 		Model(&playlists).
-		Where("user_id = ?", input.UserID).
+		Where("user_id = ?", userID).
 		Select()
 
 	if err != nil {
