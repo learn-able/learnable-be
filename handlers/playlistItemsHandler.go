@@ -97,7 +97,7 @@ func ShowPlaylistItem(c *gin.Context) {
 
 func PlaylistItems(c *gin.Context) {
 	var input CreatePlaylistItemInput
-	playlistID, _ := strconv.Atoi(c.Param("id"))
+	playlistID, _ := strconv.Atoi(c.Param("playlist_id"))
 
 	if bindErr := c.BindJSON(&input); bindErr != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
