@@ -77,10 +77,32 @@ func UserPlaylists(c *gin.Context) {
 		panic(err)
 	}
 
+	foundPlaylists := make([]ReturnedPlaylist, len(playlists)-3)
+	for _, playlist := range playlists {
+		var playlistItems []*models.PlaylistItem
+
+		itemsErr := models.PlaylistItemConnect.
+			Model(&playlistItems).
+			Where("playlist_id = ?", playlist.ID).
+			Select()
+		if itemsErr != nil {
+			panic(itemsErr)
+		}
+
+		foundPlaylists = append(foundPlaylists, ReturnedPlaylist{
+			ID:            playlist.ID,
+			UserID:        playlist.UserID,
+			Title:         playlist.Title,
+			Status:        playlist.Status,
+			DueDate:       playlist.DueDate,
+			PlaylistItems: playlistItems,
+		})
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
 		"message": "All playlists by User",
-		"data":    &playlists,
+		"data":    foundPlaylists,
 	})
 }
 
@@ -99,11 +121,33 @@ func PlaylistsByStatus(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	
+
+	foundPlaylists := make([]ReturnedPlaylist, len(playlists)-3)
+	for _, playlist := range playlists {
+		var playlistItems []*models.PlaylistItem
+
+		itemsErr := models.PlaylistItemConnect.
+			Model(&playlistItems).
+			Where("playlist_id = ?", playlist.ID).
+			Select()
+		if itemsErr != nil {
+			panic(itemsErr)
+		}
+
+		foundPlaylists = append(foundPlaylists, ReturnedPlaylist{
+			ID:            playlist.ID,
+			UserID:        playlist.UserID,
+			Title:         playlist.Title,
+			Status:        playlist.Status,
+			DueDate:       playlist.DueDate,
+			PlaylistItems: playlistItems,
+		})
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
 		"message": "All playlists by Status",
-		"data":    playlists,
+		"data":    &foundPlaylists,
 	})
 }
 
@@ -122,13 +166,23 @@ func ShowPlaylist(c *gin.Context) {
 		return
 	}
 
+	var playlistItems []*models.PlaylistItem
+
+	itemsErr := models.PlaylistItemConnect.
+		Model(&playlistItems).
+		Where("playlist_id = ?", playlistID).
+		Select()
+	if itemsErr != nil {
+		panic(itemsErr)
+	}
+
 	foundPlaylist := ReturnedPlaylist{
 		ID:            playlist.ID,
 		UserID:        playlist.UserID,
 		Title:         playlist.Title,
 		Status:        playlist.Status,
 		DueDate:       playlist.DueDate,
-		PlaylistItems: []*models.PlaylistItem{},
+		PlaylistItems: playlistItems,
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -150,20 +204,32 @@ func UpdatePlaylist(c *gin.Context) {
 	}
 
 	playlistID, _ := strconv.Atoi(c.Param("id"))
+	userID, _ := strconv.Atoi(c.Param("user_id"))
 
 	playlist := models.Playlist{
-		UserID:  input.UserID,
+		UserID:  userID,
 		Title:   input.Title,
 		Status:  input.Status,
 		DueDate: input.DueDate,
 	}
 
-	_, err := models.PlaylistConnect.Model(&playlist).
+	_, err := models.PlaylistConnect.
+		Model(&playlist).
 		Where("id = ?", playlistID).
 		Update(&playlist)
 
 	if err != nil {
 		panic(err)
+	}
+
+	var playlistItems []*models.PlaylistItem
+
+	itemsErr := models.PlaylistItemConnect.
+		Model(&playlistItems).
+		Where("playlist_id = ?", playlistID).
+		Select()
+	if itemsErr != nil {
+		panic(itemsErr)
 	}
 
 	foundPlaylist := ReturnedPlaylist{
@@ -172,7 +238,7 @@ func UpdatePlaylist(c *gin.Context) {
 		Title:         playlist.Title,
 		Status:        playlist.Status,
 		DueDate:       playlist.DueDate,
-		PlaylistItems: []*models.PlaylistItem{},
+		PlaylistItems: playlistItems,
 	}
 
 	c.JSON(http.StatusOK, gin.H{

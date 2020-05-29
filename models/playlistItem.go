@@ -10,7 +10,7 @@ import (
 
 type PlaylistItem struct {
 	ID          int       `json:"id" pg:"pk_id"`
-	PlaylistID  int       `json:"playlist_id"`
+	PlaylistID  int       `json:"playlist_id" pg:"fk:Playlist"`
 	Name        string    `json:"name"`
 	Category    string    `json:"category"`
 	Description string    `json:"description"`
