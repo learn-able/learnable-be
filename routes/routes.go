@@ -34,14 +34,14 @@ func GetRoutes() *gin.Engine {
 	// Playlist related routes
 	router.POST("/api/v0/playlists", handlers.CreatePlaylist)
 	router.GET("/api/v0/user/:user_id/playlists", handlers.UserPlaylists)
-	router.GET("/api/v0/playlist/:id", handlers.ShowPlaylist)
-	router.PUT("/api/v0/playlist/:id", handlers.UpdatePlaylist)
+	router.GET("/api/v0/playlists/:id", handlers.ShowPlaylist)
+	router.PATCH("/api/v0/user/:user_id/playlists/:id", handlers.UpdatePlaylist)
 	router.GET("/api/v0/playlist_status", handlers.PlaylistsByStatus)
 
 	// PlaylistItem routes
 	router.POST("/api/v0/items", handlers.CreatePlaylistItem)
 	router.GET("/api/v0/items/:id", handlers.ShowPlaylistItem)
-	router.GET("/api/v0/playlists/:playlist_id/items", handlers.PlaylistItems)
+	router.GET("/api/v0/playlist/:playlist_id/items", handlers.PlaylistItems)
 
 	return router
 }
