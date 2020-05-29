@@ -101,7 +101,7 @@ func UserPlaylists(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
-		"message": "All playlists by Status",
+		"message": "All playlists by User",
 		"data":    foundPlaylists,
 	})
 }
