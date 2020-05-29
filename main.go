@@ -17,10 +17,10 @@ func main() {
 	gin.SetMode(gin.ReleaseMode) // set for production
 
 	// LOCAL CONFIG
-	envErr := godotenv.Load("config/application.yml")
-	if envErr != nil {
-		log.Fatal("Error loading .yml file")
-	}
+	// envErr := godotenv.Load("config/application.yml")
+	// if envErr != nil {
+	// 	log.Fatal("Error loading .yml file")
+	// }
 	// END LOCAL CONFIG
 
 	database.Connect()
