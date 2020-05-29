@@ -10,22 +10,22 @@ import (
 )
 
 type CreatePlaylistItemInput struct {
-	PlaylistID  int       `json:"playlist_id"`
-  Name        string    `json:"name"`
-	Category    string    `json:"category"`
-	Description string    `json:"description"`
-	URL         string    `json:"url"`
-	IsComplete  bool      `json:"is_complete"`
+	PlaylistID  int    `json:"playlist_id"`
+	Name        string `json:"name"`
+	Category    string `json:"category"`
+	Description string `json:"description"`
+	URL         string `json:"url"`
+	IsComplete  bool   `json:"is_complete"`
 }
 
 type ReturnedPlaylistItem struct {
-	ID            int       `json:"id" pg:"pk_id"`
-	PlaylistID    int       `json:"playlist_id"`
-	Name          string    `json:"name"`
-	Category      string    `json:"category"`
-	Description   string    `json:"description,omitempty"`
-	URL           string    `json:"url"`
-  IsComplete    bool      `json:"is_complete"`
+	ID          int    `json:"id" pg:"pk_id"`
+	PlaylistID  int    `json:"playlist_id"`
+	Name        string `json:"name"`
+	Category    string `json:"category"`
+	Description string `json:"description,omitempty"`
+	URL         string `json:"url"`
+	IsComplete  bool   `json:"is_complete"`
 }
 
 func CreatePlaylistItem(c *gin.Context) {
@@ -40,25 +40,40 @@ func CreatePlaylistItem(c *gin.Context) {
 	}
 
 	playlistItem := models.PlaylistItem{
-    PlaylistID:  input.PlaylistID,
-    Name:        input.Name,
+		PlaylistID:  input.PlaylistID,
+		Name:        input.Name,
 		Category:    input.Category,
-  	Description: input.Description,
-  	URL:         input.URL,
-  	IsComplete:  false,
+		Description: input.Description,
+		URL:         input.URL,
+		IsComplete:  false,
 	}
-	if err := models.PlaylistItemConnect.Insert(&playlistItem); err != nil {
-		panic(err)
+	if plItemErr := models.PlaylistItemConnect.Insert(&playlistItem); plItemErr != nil {
+		panic(plItemErr)
 	}
 
-	newPlaylistItem := ReturnedPlaylistItem {
-    ID:             playlistItem.ID,
-  	PlaylistID:     playlistItem.PlaylistID,
-  	Name:           playlistItem.Name,
-		Category:       playlistItem.Category,
-  	Description:    playlistItem.Description,
-  	URL:            playlistItem.URL,
-    IsComplete:     playlistItem.IsComplete,
+	playlist := &models.Playlist{ID: input.PlaylistID}
+
+	if playlistErr := models.PlaylistConnect.Select(playlist); playlistErr != nil {
+		panic(playlistErr)
+	}
+
+	var playlistItems []*models.PlaylistItem
+
+	itemsErr := models.PlaylistItemConnect.
+		Model(&playlistItems).
+		Where("playlist_id = ?", input.PlaylistID).
+		Select()
+	if itemsErr != nil {
+		panic(itemsErr)
+	}
+
+	foundPlaylist := ReturnedPlaylist{
+		ID:            playlist.ID,
+		UserID:        playlist.UserID,
+		Title:         playlist.Title,
+		Status:        playlist.Status,
+		DueDate:       playlist.DueDate,
+		PlaylistItems: playlistItems,
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -83,14 +98,14 @@ func ShowPlaylistItem(c *gin.Context) {
 		return
 	}
 
-	foundPlaylistItem := ReturnedPlaylistItem {
-    ID:             playlistItem.ID,
-  	PlaylistID:     playlistItem.PlaylistID,
-  	Name:           playlistItem.Name,
-		Category:       playlistItem.Category,
-  	Description:    playlistItem.Description,
-  	URL:            playlistItem.URL,
-    IsComplete:     playlistItem.IsComplete,
+	foundPlaylistItem := ReturnedPlaylistItem{
+		ID:          playlistItem.ID,
+		PlaylistID:  playlistItem.PlaylistID,
+		Name:        playlistItem.Name,
+		Category:    playlistItem.Category,
+		Description: playlistItem.Description,
+		URL:         playlistItem.URL,
+		IsComplete:  playlistItem.IsComplete,
 	}
 
 	c.JSON(http.StatusOK, gin.H{
