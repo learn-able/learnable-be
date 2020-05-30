@@ -13,7 +13,7 @@ func GetRoutes() *gin.Engine {
 
 	router.Use(cors.Middleware(cors.Config{
 		Origins:         "*",
-		Methods:         "GET, PUT, POST, DELETE",
+		Methods:         "GET, PUT, POST, DELETE, PATCH",
 		RequestHeaders:  "Origin, Authorization, Content-Type",
 		ExposedHeaders:  "",
 		MaxAge:          50 * time.Second,
