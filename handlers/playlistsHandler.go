@@ -273,18 +273,8 @@ func DeletePlaylist(c *gin.Context) {
 		panic(itemsErr)
 	}
 
-	deletedPlaylist := ReturnedPlaylist{
-		ID:            playlist.ID,
-		UserID:        playlist.UserID,
-		Title:         playlist.Title,
-		Status:        playlist.Status,
-		DueDate:       playlist.DueDate,
-		PlaylistItems: playlistItems,
-	}
-
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
 		"message": "Playlist deleted",
-		"data":    deletedPlaylist,
 	})
 }
