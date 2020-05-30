@@ -77,7 +77,7 @@ func UserPlaylists(c *gin.Context) {
 		panic(err)
 	}
 
-	foundPlaylists := make([]ReturnedPlaylist, len(playlists)-3)
+	foundPlaylists := make([]ReturnedPlaylist, 0)
 	for _, playlist := range playlists {
 		var playlistItems []*models.PlaylistItem
 
@@ -122,7 +122,7 @@ func PlaylistsByStatus(c *gin.Context) {
 		panic(err)
 	}
 
-	foundPlaylists := make([]ReturnedPlaylist, len(playlists)-3)
+	foundPlaylists := make([]ReturnedPlaylist, 0)
 	for _, playlist := range playlists {
 		var playlistItems []*models.PlaylistItem
 
