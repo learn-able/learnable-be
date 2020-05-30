@@ -247,3 +247,44 @@ func UpdatePlaylist(c *gin.Context) {
 		"data":    foundPlaylist,
 	})
 }
+
+func DeletePlaylist(c *gin.Context) {
+	db := models.PlaylistConnect
+	playlistID, _ := strconv.Atoi(c.Param("id"))
+	playlist := &models.Playlist{ID: playlistID}
+
+	err := db.Delete(playlist)
+	if err != nil {
+		log.Printf("Error deleting Playlist from database\nReason: %v\n", err)
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":  http.StatusNotFound,
+			"message": "Playlist not deleted",
+		})
+		return
+	}
+
+	var playlistItems []*models.PlaylistItem
+
+	_, itemsErr := models.PlaylistItemConnect.
+		Model(&playlistItems).
+		Where("playlist_id = ?", playlistID).
+		Delete()
+	if itemsErr != nil {
+		panic(itemsErr)
+	}
+
+	deletedPlaylist := ReturnedPlaylist{
+		ID:            playlist.ID,
+		UserID:        playlist.UserID,
+		Title:         playlist.Title,
+		Status:        playlist.Status,
+		DueDate:       playlist.DueDate,
+		PlaylistItems: playlistItems,
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Playlist deleted",
+		"data":    deletedPlaylist,
+	})
+}
