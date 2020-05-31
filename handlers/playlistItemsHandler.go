@@ -134,3 +134,59 @@ func PlaylistItems(c *gin.Context) {
 		"data":    &playlistItems,
 	})
 }
+
+func UpdateItem(c *gin.Context) {
+	var input CreatePlaylistItemInput
+
+	if bindErr := c.BindJSON(&input); bindErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": http.StatusBadRequest,
+			"error":  bindErr.Error(),
+		})
+		return
+	}
+
+	playlistID, _ := strconv.Atoi(c.Param("playlist_id"))
+	playlistItemID, _ := strconv.Atoi(c.Param("id"))
+	playlistItem := &models.PlaylistItem{ID: playlistItemID}
+
+	_, err := models.PlaylistItemConnect.
+		Model(playlistItem).
+		Set("is_complete = ?", input.IsComplete).
+		Where("id = ?", playlistItemID).
+		Update()
+
+	if err != nil {
+		panic(err)
+	}
+
+	playlist := &models.Playlist{ID: playlistID}
+	if playlistErr := models.PlaylistConnect.Select(playlist); playlistErr != nil {
+		panic(playlistErr)
+	}
+
+	var playlistItems []*models.PlaylistItem
+
+	itemsErr := models.PlaylistItemConnect.
+		Model(&playlistItems).
+		Where("playlist_id = ?", playlistID).
+		Select()
+	if itemsErr != nil {
+		panic(itemsErr)
+	}
+
+	foundPlaylist := ReturnedPlaylist{
+		ID:            playlist.ID,
+		UserID:        playlist.UserID,
+		Title:         playlist.Title,
+		Status:        playlist.Status,
+		DueDate:       playlist.DueDate,
+		PlaylistItems: playlistItems,
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Playlist found",
+		"data":    foundPlaylist,
+	})
+}
