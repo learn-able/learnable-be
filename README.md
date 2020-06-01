@@ -26,7 +26,7 @@ You can access our front-end repository here: https://github.com/learn-able/lear
   1. comment out code between HEROKU tags
 - in the command line, go run main.go
 
-1. to get your username from the command line:
+To get your postgres username from the command line:
   1. psql postgres
   1. \du
   1. exit
