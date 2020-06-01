@@ -76,6 +76,7 @@ func CreatePlaylistItem(c *gin.Context) {
 		Title:         playlist.Title,
 		Status:        playlist.Status,
 		DueDate:       playlist.DueDate,
+		IsFavorite:    playlist.IsFavorite,
 		PlaylistItems: playlistItems,
 	}
 
@@ -152,6 +153,7 @@ func UpdateItem(c *gin.Context) {
 
 	playlistID, _ := strconv.Atoi(c.Param("playlist_id"))
 	playlistItemID, _ := strconv.Atoi(c.Param("id"))
+
 	playlistItem := models.PlaylistItem{
 		ID:          playlistItemID,
 		PlaylistID:  playlistID,
@@ -193,6 +195,7 @@ func UpdateItem(c *gin.Context) {
 		Title:         playlist.Title,
 		Status:        playlist.Status,
 		DueDate:       playlist.DueDate,
+		IsFavorite:    playlist.IsFavorite,
 		PlaylistItems: playlistItems,
 	}
 
