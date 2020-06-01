@@ -16,6 +16,7 @@ type PlaylistItem struct {
 	Description string    `json:"description"`
 	URL         string    `json:"url"`
 	IsComplete  bool      `json:"is_complete"`
+	IsFavorite  bool      `json:"is_favorite"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
