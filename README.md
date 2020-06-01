@@ -12,12 +12,12 @@ We have created twelve API endpoints. The API endpoints are for our front-end te
 ##### You can access our front-end repository here: https://github.com/learn-able/learnable-fe
 ---
 ## Installation Locally  
-- Clone this repo to your local machine with: git clone git@github.com:learn-able/learnable-be.git
+- Clone this repo to your local machine with: `git clone git@github.com:learn-able/learnable-be.git`
 - cd into the directory
-- Install Golang with brew install go
+- Install Golang with `brew install go`
 - Start Postgres (either the app or command line)
 - Add 'application.yml' file to config folder
-  1. DB_USER "your_postgres_user_name"
+  1. DB_USER: "your_postgres_user_name"
   1. DB_PASSWORD: "postgres"
   1. DB_ADDRESS: "localhost:5432"
   1. DB_NAME: "postgres"
@@ -27,9 +27,9 @@ We have created twelve API endpoints. The API endpoints are for our front-end te
 - in the command line, go run main.go
 
 To get your postgres username from the command line:
-  1. psql postgres
-  1. \du
-  1. exit
+  1. `psql postgres`
+  1. `\du`
+  1. `exit`
 ---
 ## Requests and Responses
 ![GitHub Logo](/images/req_res1.png)  
