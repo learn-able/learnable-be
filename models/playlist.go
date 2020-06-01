@@ -15,6 +15,7 @@ type Playlist struct {
 	Status        string          `json:"status"`
 	DueDate       string          `json:"due_date"`
 	PlaylistItems []*PlaylistItem `json:"playlist_items"`
+	IsFavorite    bool            `json:"is_favorite"`
 	CreatedAt     time.Time       `json:"created_at"`
 	UpdatedAt     time.Time       `json:"updated_at"`
 }

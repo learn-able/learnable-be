@@ -16,6 +16,7 @@ type CreatePlaylistItemInput struct {
 	Description string `json:"description"`
 	URL         string `json:"url"`
 	IsComplete  bool   `json:"is_complete"`
+	IsFavorite  bool   `json:"is_favorite"`
 }
 
 type ReturnedPlaylistItem struct {
@@ -26,6 +27,7 @@ type ReturnedPlaylistItem struct {
 	Description string `json:"description,omitempty"`
 	URL         string `json:"url"`
 	IsComplete  bool   `json:"is_complete"`
+	IsFavorite  bool   `json:"is_favorite"`
 }
 
 func CreatePlaylistItem(c *gin.Context) {
@@ -46,6 +48,7 @@ func CreatePlaylistItem(c *gin.Context) {
 		Description: input.Description,
 		URL:         input.URL,
 		IsComplete:  false,
+		IsFavorite:  false,
 	}
 	if plItemErr := models.PlaylistItemConnect.Insert(&playlistItem); plItemErr != nil {
 		panic(plItemErr)
@@ -73,6 +76,7 @@ func CreatePlaylistItem(c *gin.Context) {
 		Title:         playlist.Title,
 		Status:        playlist.Status,
 		DueDate:       playlist.DueDate,
+		IsFavorite:    playlist.IsFavorite,
 		PlaylistItems: playlistItems,
 	}
 
@@ -106,6 +110,7 @@ func ShowPlaylistItem(c *gin.Context) {
 		Description: playlistItem.Description,
 		URL:         playlistItem.URL,
 		IsComplete:  playlistItem.IsComplete,
+		IsFavorite:  playlistItem.IsFavorite,
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -148,11 +153,20 @@ func UpdateItem(c *gin.Context) {
 
 	playlistID, _ := strconv.Atoi(c.Param("playlist_id"))
 	playlistItemID, _ := strconv.Atoi(c.Param("id"))
-	playlistItem := &models.PlaylistItem{ID: playlistItemID}
+
+	playlistItem := models.PlaylistItem{
+		ID:          playlistItemID,
+		PlaylistID:  playlistID,
+		Name:        input.Name,
+		Category:    input.Category,
+		Description: input.Description,
+		URL:         input.URL,
+		IsComplete:  input.IsComplete,
+		IsFavorite:  input.IsFavorite,
+	}
 
 	_, err := models.PlaylistItemConnect.
-		Model(playlistItem).
-		Set("is_complete = ?", input.IsComplete).
+		Model(&playlistItem).
 		Where("id = ?", playlistItemID).
 		Update()
 
@@ -181,12 +195,13 @@ func UpdateItem(c *gin.Context) {
 		Title:         playlist.Title,
 		Status:        playlist.Status,
 		DueDate:       playlist.DueDate,
+		IsFavorite:    playlist.IsFavorite,
 		PlaylistItems: playlistItems,
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
-		"message": "Playlist found",
+		"message": "PlaylistItem Updated",
 		"data":    foundPlaylist,
 	})
 }
