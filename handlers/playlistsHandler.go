@@ -10,11 +10,12 @@ import (
 )
 
 type CreatePlaylistInput struct {
-	ID      int    `json:"id"`
-	UserID  int    `json:"user_id"`
-	Title   string `json:"title"`
-	Status  string `json:"status"`
-	DueDate string `json:"due_date"`
+	ID         int    `json:"id"`
+	UserID     int    `json:"user_id"`
+	Title      string `json:"title"`
+	Status     string `json:"status"`
+	IsFavorite bool   `json:"is_favorite"`
+	DueDate    string `json:"due_date"`
 }
 
 type ReturnedPlaylist struct {
@@ -23,6 +24,7 @@ type ReturnedPlaylist struct {
 	Title         string                 `json:"title"`
 	Status        string                 `json:"status"`
 	DueDate       string                 `json:"due_date"`
+	IsFavorite    bool                   `json:"is_favorite"`
 	PlaylistItems []*models.PlaylistItem `json:"playlist_items"`
 }
 
@@ -38,10 +40,11 @@ func CreatePlaylist(c *gin.Context) {
 	}
 
 	playlist := models.Playlist{
-		UserID:  input.UserID,
-		Title:   input.Title,
-		Status:  "valid",
-		DueDate: input.DueDate,
+		UserID:     input.UserID,
+		Title:      input.Title,
+		Status:     "valid",
+		IsFavorite: false,
+		DueDate:    input.DueDate,
 	}
 	if err := models.PlaylistConnect.Insert(&playlist); err != nil {
 		panic(err)
@@ -53,6 +56,7 @@ func CreatePlaylist(c *gin.Context) {
 		Title:         playlist.Title,
 		Status:        playlist.Status,
 		DueDate:       playlist.DueDate,
+		IsFavorite:    playlist.IsFavorite,
 		PlaylistItems: []*models.PlaylistItem{},
 	}
 
@@ -95,6 +99,7 @@ func UserPlaylists(c *gin.Context) {
 			Title:         playlist.Title,
 			Status:        playlist.Status,
 			DueDate:       playlist.DueDate,
+			IsFavorite:    playlist.IsFavorite,
 			PlaylistItems: playlistItems,
 		})
 	}
@@ -140,6 +145,7 @@ func PlaylistsByStatus(c *gin.Context) {
 			Title:         playlist.Title,
 			Status:        playlist.Status,
 			DueDate:       playlist.DueDate,
+			IsFavorite:    playlist.IsFavorite,
 			PlaylistItems: playlistItems,
 		})
 	}
@@ -182,6 +188,7 @@ func ShowPlaylist(c *gin.Context) {
 		Title:         playlist.Title,
 		Status:        playlist.Status,
 		DueDate:       playlist.DueDate,
+		IsFavorite:    playlist.IsFavorite,
 		PlaylistItems: playlistItems,
 	}
 
@@ -233,11 +240,12 @@ func UpdatePlaylist(c *gin.Context) {
 	}
 
 	foundPlaylist := ReturnedPlaylist{
-		ID:            playlistID,
+		ID:            playlist.ID,
 		UserID:        playlist.UserID,
 		Title:         playlist.Title,
 		Status:        playlist.Status,
 		DueDate:       playlist.DueDate,
+		IsFavorite:    playlist.IsFavorite,
 		PlaylistItems: playlistItems,
 	}
 
@@ -273,18 +281,8 @@ func DeletePlaylist(c *gin.Context) {
 		panic(itemsErr)
 	}
 
-	deletedPlaylist := ReturnedPlaylist{
-		ID:            playlist.ID,
-		UserID:        playlist.UserID,
-		Title:         playlist.Title,
-		Status:        playlist.Status,
-		DueDate:       playlist.DueDate,
-		PlaylistItems: playlistItems,
-	}
-
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
 		"message": "Playlist deleted",
-		"data":    deletedPlaylist,
 	})
 }
