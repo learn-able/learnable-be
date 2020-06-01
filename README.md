@@ -1,7 +1,7 @@
 # Learnable BE  
 ---
 ## Description  
-Have you ever had so many browser tabs open because you didn't want to lose the content that was on them? Well, this application was built for you! Our application allows you to have one web page open that stores all of that content that you want to read, watch, and do. Here you can create playlists for storing articles, videos, or other content. This application can also help with time management. You can set a 'due date' for when you want to complete a playlist.  Once an item within a playlist is complete, you simply mark it done and watch your progress bar fill up.  
+Have you ever had so many browser tabs open because you didn't want to lose the content that was on them? Well, this application was built for you! Our application allows you to have one web page open that stores all of that content you want to read, watch, and do. Here you can create playlists for storing articles, videos, or other content. This application can also help with time management. You can set a 'due date' for when you want to complete a playlist.  Once an item within a playlist is complete, you simply mark it done and watch your progress bar fill up.  
 ##### You can visit our website Learnable here: https://learnablebe.herokuapp.com/api/v0  
 
 ![GitHub Logo](/images/playlist.png)  
@@ -24,12 +24,17 @@ We have created twelve API endpoints. The API endpoints are for our front-end te
 - In learnabledb.go and main.go:
   1. uncomment code between LOCAL tags
   1. comment out code between HEROKU tags
-- in the command line, go run main.go
+- In the command line, `go run main.go`
+
 
 To get your postgres username from the command line:
   1. `psql postgres`
   1. `\du`
   1. `exit`
+
+
+Golang documentation: https://golang.org/doc/
+PostgreSQL documentation: https://www.postgresql.org
 ---
 ## Requests and Responses
 ![GitHub Logo](/images/req_res1.png)  
