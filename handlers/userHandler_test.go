@@ -14,7 +14,7 @@ func TestUserActions(t *testing.T) {
 	t.Run("Test Get User by ID endpoint", func(t *testing.T) {
 		router := routes.GetRoutes()
 		w := httptest.NewRecorder()
-		req, err := http.NewRequest("GET", "/api/v0/users/10", nil)
+		req, err := http.NewRequest("GET", "/api/v0/users/1", nil)
 		if err != nil {
 			t.Fatal(err)
 		}
