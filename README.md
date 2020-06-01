@@ -20,7 +20,7 @@ You can access our front-end repository here: https://github.com/learn-able/lear
   1. DB_USER "your_postgres_user_name"
     1. to get your username from the command line:
       1. psql postgres
-      1.\du
+      1. \du
       1. exit
   1. DB_PASSWORD: "postgres"
   1. DB_ADDRESS: "localhost:5432"
