@@ -186,7 +186,7 @@ func UpdateItem(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
-		"message": "Playlist found",
+		"message": "PlaylistItem Updated",
 		"data":    foundPlaylist,
 	})
 }
