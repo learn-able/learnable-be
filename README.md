@@ -11,7 +11,7 @@ This is the back-end repository of our full-stack application. The coding langua
 We have created twelve API endpoints. The API endpoints are for our front-end team. It allows them to get the appropriate data back when they send us an HTTP request. Some of those requests include creating a playlist, getting all playlist for a certain user, deleting a playlist, creating a playlist item, updating a playlist item, and more.  
 ##### You can access our front-end repository here: https://github.com/learn-able/learnable-fe
 ---
-## Installation Locally  
+## Installation Locally ##  
 - Clone this repo to your local machine with: `git clone git@github.com:learn-able/learnable-be.git`
 - cd into the directory
 - Install Golang with `brew install go`
@@ -33,7 +33,7 @@ To get your postgres username from the command line:
   1. `exit`
 
 
-Golang documentation: https://golang.org/doc/
+Golang documentation: https://golang.org/doc/  
 PostgreSQL documentation: https://www.postgresql.org
 ---
 ## Requests and Responses
