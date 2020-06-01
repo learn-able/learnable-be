@@ -214,6 +214,7 @@ func UpdatePlaylist(c *gin.Context) {
 	userID, _ := strconv.Atoi(c.Param("user_id"))
 
 	playlist := models.Playlist{
+		ID:         playlistID,
 		UserID:     userID,
 		Title:      input.Title,
 		Status:     input.Status,
